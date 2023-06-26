@@ -1,7 +1,14 @@
-FROM centos:latest
+FROM ubuntu:latest
 
-RUN yum install httpd -y
+# Install httpd
+RUN apt-get update && \
+    apt-get install -y apache2 && \
+    apt-get clean
 
-RUN systemctl start httpd && systemctl enable httpd
+COPY index.html  /var/www/html
 
-COPY index.html  /var/www/html 
+# Expose port 80 (default HTTP port)
+EXPOSE 80
+
+# Start the httpd service when the container launches
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
